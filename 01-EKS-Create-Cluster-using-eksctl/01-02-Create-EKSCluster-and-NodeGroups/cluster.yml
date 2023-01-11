@@ -1,0 +1,34 @@
+# cluster.yaml
+# A cluster with one managed nodegroups
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eksdemo1
+  region: us-east-1
+  version: "1.21"
+
+vpc:
+  cidr: 10.10.0.0/16
+  
+managedNodeGroups:
+  - name: eksdemo1-ng-public1
+    minSize: 2
+    maxSize: 4
+    desiredCapacity: 2
+    instanceType: t3.medium
+    volumeSize: 20
+    ssh:
+      allow: true
+      publicKeyName: kube-demo
+    tags:
+      nodegroup-role: worker
+    iam:
+      withAddonPolicies:
+        externalDNS: true
+        certManager: true
+        imageBuilder: true
+        appMesh: true
+        albIngress: true
+availabilityZones: ["us-east-1a","us-east-1b"]
